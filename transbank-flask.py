@@ -69,3 +69,16 @@ def webpay_plus_reverse_or_refund():
     response_json = json.dumps(response_dict)
 
     return response_json
+
+@app.route("/transaction_status", methods=["POST"])
+def webpay_plus_status():
+    token = request.form.get("token_ws")
+
+    try:
+        status = (Transaction(WebpayOptions("597055555532", "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C", IntegrationType.TEST))).status(token)
+        response_dict = {key: status[key] for key in refund}
+        response_json = json.dumps(response_dict)
+
+        return response_json
+    except Exception as e:
+        print(f"Error al obtener el estado: {e}")
