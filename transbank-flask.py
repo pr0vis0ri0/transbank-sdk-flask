@@ -24,3 +24,28 @@ def webpay_plus_transaction():
     output = response['url'] + "?token_ws=" + response['token']
 
     return output
+
+@app.route("/transaction_commit", methods=["POST"])
+def webpay_plus_commit():
+    token = request.form.get("token_ws")
+
+    response = (Transaction(WebpayOptions("597055555532", "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C", IntegrationType.TEST))).commit(token=token)
+    
+    response_dict = {
+        "vci": response['vci'],
+        "amount": response['amount'],
+        "status": response['status'],
+        "buy_order": response['buy_order'],
+        "session_id": response['session_id'],
+        "card_detail": response['card_detail'],
+        "accounting_date": response['accounting_date'],
+        "transaction_date": response['transaction_date'],
+        "authorization_code": response['authorization_code'],
+        "payment_type_code": response['payment_type_code'],
+        "response_code": response['response_code'],
+        "installments_number": response['installments_number']
+    }
+
+    response_json = json.dumps(response_dict)
+
+    return response_json
