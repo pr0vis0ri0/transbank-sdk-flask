@@ -49,3 +49,23 @@ def webpay_plus_commit():
     response_json = json.dumps(response_dict)
 
     return response_json
+
+@app.route("/transaction_refund", methods=["POST"])
+def webpay_plus_reverse_or_refund():
+    token = request.form.get("token_ws")
+    amount = request.form.get("amount")
+
+    refund = (Transaction(WebpayOptions("597055555532", "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C", IntegrationType.TEST))).refund(token, amount)
+
+    response_dict = {
+        "authorization_code" : refund["authorization_code"],
+        "authorization_date" : refund['authorization_date'],
+        "balance" : refund['balance'],
+        "nullified_amount" : refund['nullified_amount'],
+        "response_code" : refund['response_code'],
+        "type" : refund['type']
+    }
+    
+    response_json = json.dumps(response_dict)
+
+    return response_json
